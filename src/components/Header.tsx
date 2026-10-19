@@ -10,7 +10,17 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const { totalItems, openCart } = useCart();
+  const { totalItems, openCart, closeCart } = useCart();
+
+  const handleOpenCart = () => {
+    setMobileOpen(false);
+    openCart();
+  };
+
+  const handleOpenMobileMenu = () => {
+    closeCart();
+    setMobileOpen(true);
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -65,15 +75,15 @@ export default function Header() {
       {/* Header */}
       <header className={`nav-header ${scrolled ? "scrolled" : ""}`}>
         <div
-          className="flex items-center justify-between px-4 sm:px-6 lg:px-12"
+          className="flex items-center justify-between px-3 sm:px-6 lg:px-12"
           style={{ height: "68px" }}
         >
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 no-underline">
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-2 no-underline shrink-0">
             <span
               style={{
                 fontFamily: "var(--font-serif)",
-                fontSize: "clamp(1.15rem, 4vw, 1.35rem)",
+                fontSize: "clamp(1.05rem, 3.8vw, 1.35rem)",
                 color: "var(--color-charcoal)",
                 letterSpacing: "-0.02em",
               }}
@@ -82,11 +92,11 @@ export default function Header() {
             </span>
             <span
               style={{
-                fontSize: "0.62rem",
+                fontSize: "0.6rem",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 color: "var(--color-walnut)",
-                fontWeight: 500,
+                fontWeight: 600,
                 marginTop: "2px",
               }}
             >
@@ -153,8 +163,11 @@ export default function Header() {
           {/* Mobile Actions: Search + Favorites + Cart + Hamburger */}
           <div className="flex lg:hidden items-center gap-0.5 sm:gap-1">
             <button
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="p-2 text-charcoal hover:text-walnut transition-colors"
+              onClick={() => {
+                closeCart();
+                setSearchOpen(!searchOpen);
+              }}
+              className="w-9 h-9 flex items-center justify-center text-charcoal hover:text-walnut transition-colors rounded-full"
               aria-label="Search products"
               style={{ background: "none", border: "none", cursor: "pointer" }}
             >
@@ -163,33 +176,33 @@ export default function Header() {
 
             <Link
               href="/favorites"
-              className="p-2 text-charcoal hover:text-walnut transition-colors no-underline"
+              className="w-9 h-9 flex items-center justify-center text-charcoal hover:text-walnut transition-colors no-underline rounded-full"
               aria-label="View favorites"
             >
               <Heart className="w-5 h-5" />
             </Link>
 
             <button
-              onClick={openCart}
-              className="p-2 text-charcoal hover:text-walnut transition-colors relative"
+              onClick={handleOpenCart}
+              className="w-9 h-9 flex items-center justify-center text-charcoal hover:text-walnut transition-colors relative rounded-full"
               aria-label={`View shopping cart with ${totalItems} items`}
               style={{ background: "none", border: "none", cursor: "pointer" }}
             >
               <ShoppingBag className="w-5 h-5" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-walnut text-white text-[10px] font-bold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 bg-walnut text-white text-[9px] font-bold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center shadow-xs">
                   {totalItems}
                 </span>
               )}
             </button>
 
             <button
-              className="p-2 text-charcoal hover:text-walnut transition-colors"
-              onClick={() => setMobileOpen(true)}
+              className="w-9 h-9 flex items-center justify-center text-charcoal hover:text-walnut transition-colors rounded-full"
+              onClick={handleOpenMobileMenu}
               aria-label="Open menu"
               style={{ background: "none", border: "none", cursor: "pointer" }}
             >
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5" />
             </button>
           </div>
         </div>

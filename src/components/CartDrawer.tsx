@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/products";
 import { siteConfig } from "@/lib/config";
-import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Truck } from "lucide-react";
+import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Truck, Sparkles } from "lucide-react";
 
 export default function CartDrawer() {
   const {
@@ -69,38 +69,53 @@ export default function CartDrawer() {
 
   return (
     <>
-      {/* Dark Backdrop */}
+      {/* Dark Backdrop with higher z-index than sticky header */}
       <div
-        className={`fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 z-50 ${
+        className={`fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 z-[250] ${
           isCartOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={closeCart}
         aria-hidden="true"
       />
 
-      {/* Slide-over Drawer Panel */}
+      {/* Slide-over Drawer Panel with higher z-index than sticky header */}
       <aside
         ref={drawerRef}
         role="dialog"
         aria-modal="true"
         aria-label="Shopping Cart Drawer"
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col transform transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-white shadow-2xl z-[260] flex flex-col transform transition-transform duration-300 ease-out ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Drawer Header */}
-        <div className="p-4 sm:p-5 border-b border-border flex items-center justify-between bg-ivory/50">
+        {/* Drawer Header with solid white background */}
+        <div className="p-4 sm:p-5 border-b border-border flex items-center justify-between bg-white sticky top-0 z-10 shadow-xs">
           <div className="flex items-center gap-2.5">
-            <ShoppingBag className="w-5 h-5 text-walnut" />
-            <h2 className="font-serif text-xl text-charcoal font-normal">Shopping Bag</h2>
-            <span className="text-xs bg-walnut/10 text-walnut font-medium px-2 py-0.5 rounded-full">
-              {totalItems} {totalItems === 1 ? "item" : "items"}
-            </span>
+            <div className="w-8 h-8 rounded-full bg-stone/40 flex items-center justify-center text-walnut shrink-0">
+              <ShoppingBag className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="font-serif text-lg sm:text-xl text-charcoal font-semibold leading-none">
+                  Shopping Bag
+                </h2>
+                <span className="text-[10px] bg-walnut/10 text-walnut font-bold px-2 py-0.5 rounded-full">
+                  {totalItems}
+                </span>
+              </div>
+              <p className="text-[11px] text-warm-gray mt-0.5">
+                {totalItems === 0
+                  ? "Bag is empty"
+                  : totalItems === 1
+                  ? "1 item selected"
+                  : `${totalItems} items selected`}
+              </p>
+            </div>
           </div>
 
           <button
             onClick={closeCart}
-            className="p-2 text-charcoal hover:text-walnut hover:bg-stone/40 rounded-full transition-colors"
+            className="w-9 h-9 flex items-center justify-center text-charcoal hover:text-walnut bg-stone/30 hover:bg-stone/60 rounded-full transition-colors cursor-pointer"
             aria-label="Close cart drawer"
           >
             <X className="w-5 h-5" />
@@ -113,8 +128,9 @@ export default function CartDrawer() {
             <Truck className="w-4 h-4 text-walnut shrink-0" />
             <p className="text-xs text-charcoal">
               {isFreeShipping ? (
-                <span className="font-medium text-emerald-800">
-                  🎉 You qualify for <strong>FREE Kathmandu Valley White-Glove Delivery!</strong>
+                <span className="font-medium text-emerald-800 inline-flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span>You qualify for <strong>FREE Kathmandu Valley White-Glove Delivery!</strong></span>
                 </span>
               ) : (
                 <span>

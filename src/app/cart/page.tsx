@@ -126,8 +126,9 @@ export default function CartPage() {
                   <Truck className="w-5 h-5 text-walnut" />
                   <p className="text-xs sm:text-sm text-charcoal">
                     {isFreeShipping ? (
-                      <span className="font-semibold text-emerald-800">
-                        🎉 You qualify for FREE White-Glove Kathmandu Valley Delivery & Assembly!
+                      <span className="font-semibold text-emerald-800 inline-flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                        <span>You qualify for FREE White-Glove Kathmandu Valley Delivery & Assembly!</span>
                       </span>
                     ) : (
                       <span>
