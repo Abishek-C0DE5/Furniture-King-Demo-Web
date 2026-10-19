@@ -65,15 +65,38 @@
 
 /* ===== COMPONENT STYLES ===== */
 @layer components {
-  /* Announcement Bar */
+  /* Announcement Bar & Infinite Right-to-Left Ticker */
   .announcement-bar {
     background-color: var(--color-charcoal);
     color: var(--color-stone);
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    text-align: center;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+    animation: marqueeScroll 32s linear infinite;
+  }
+
+  .announcement-bar:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marqueeScroll {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
   }
 
   /* Navigation */
@@ -120,20 +143,12 @@
     width: 100%;
   }
 
-  /* Hero Section */
+  /* Hero Section (Desktop) */
   .hero-section {
     position: relative;
-    min-height: 92vh;
-    display: flex;
+    min-height: 84vh;
     align-items: flex-end;
     overflow: hidden;
-  }
-
-  @media (max-width: 768px) {
-    .hero-section {
-      min-height: 80vh;
-      align-items: flex-end;
-    }
   }
 
   .hero-overlay {
@@ -152,13 +167,13 @@
   .hero-content {
     position: relative;
     z-index: 2;
-    padding: 4rem 2rem 5rem;
+    padding: 2.5rem 1.5rem 3rem;
     max-width: 680px;
   }
 
   @media (min-width: 1024px) {
     .hero-content {
-      padding: 6rem 4rem 7rem;
+      padding: 3.5rem 3rem 4rem;
     }
   }
 
@@ -169,22 +184,22 @@
     text-transform: uppercase;
     color: var(--color-walnut);
     font-weight: 500;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
 
   .section-title {
     font-family: var(--font-serif);
-    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
     color: var(--color-charcoal);
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     line-height: 1.15;
   }
 
   .section-subtitle {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--color-warm-gray);
     max-width: 540px;
-    line-height: 1.7;
+    line-height: 1.6;
   }
 
   /* Product Card */
@@ -220,7 +235,7 @@
   }
 
   .product-card-body {
-    padding: 1.25rem 1.25rem 1.5rem;
+    padding: 1.1rem 1.1rem 1.1rem;
   }
 
   .product-card-category {
@@ -228,7 +243,7 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-walnut);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.35rem;
     font-weight: 500;
   }
 
@@ -453,7 +468,7 @@
   .footer {
     background-color: var(--color-charcoal);
     color: var(--color-stone);
-    padding: 4rem 0 2rem;
+    padding: 2.75rem 0 1.5rem;
   }
 
   .footer a {
@@ -782,3 +797,146 @@
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
+
+/* ===== 3D SMOOTHNESS & DEPTH UTILITIES ===== */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.depth-shadow-3d {
+  box-shadow: 0 20px 40px -15px rgba(37, 35, 31, 0.15),
+              0 0 25px -5px rgba(128, 101, 77, 0.1);
+}
+
+.depth-shadow-3d-hover {
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.depth-shadow-3d-hover:hover {
+  box-shadow: 0 30px 60px -12px rgba(37, 35, 31, 0.22),
+              0 0 35px -5px rgba(212, 163, 115, 0.2);
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+.animate-float-3d {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+/* ===== DEDICATED RECEIPT PRINT STYLES ===== */
+@media print {
+  /* Hide all website chrome, navigations, footers, drawer, floating buttons, action bars */
+  header,
+  nav,
+  footer,
+  .announcement-bar,
+  .nav-header,
+  .footer,
+  .whatsapp-float,
+  .no-print,
+  .print-hidden,
+  aside,
+  [role="dialog"],
+  .breadcrumbs {
+    display: none !important;
+  }
+
+  /* Page & body reset for pristine print quality */
+  html,
+  body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 10.5pt !important;
+    line-height: 1.4 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Strip page wrapper padding and shadows */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    width: 100% !important;
+  }
+
+  .print-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    background: transparent !important;
+    min-height: auto !important;
+  }
+
+  /* Receipt Card formatting */
+  #printable-receipt {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 16px !important;
+    border: 1.5px solid #25231f !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-hidden {
+    display: none !important;
+  }
+
+  .print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .print-table th,
+  .print-table td {
+    border: 1px solid #d1d5db !important;
+    padding: 6px 8px !important;
+  }
+
+  .print-table th {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+    font-weight: 600 !important;
+  }
+
+  tr,
+  .print-avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  @page {
+    margin: 10mm;
+    size: A4 portrait;
+  }
+}

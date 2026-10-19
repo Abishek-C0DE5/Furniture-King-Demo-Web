@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { categories, getAllRooms } from "@/lib/products";
 import { siteConfig } from "@/lib/config";
+import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: `Collections | ${siteConfig.businessName}`,
@@ -42,10 +43,10 @@ const roomHighlights = [
 
 export default function CollectionsPage() {
   return (
-    <div className="pt-28 pb-20">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+    <div className="pt-24 sm:pt-28 pb-14 sm:pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
           <span className="text-xs uppercase tracking-widest text-walnut font-medium mb-3 block">
             Curated Spaces
           </span>
@@ -73,7 +74,7 @@ export default function CollectionsPage() {
             Explore by Living Space
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {roomHighlights.map((room) => (
               <div
                 key={room.slug}
@@ -105,10 +106,8 @@ export default function CollectionsPage() {
                       href={`/shop?room=${encodeURIComponent(room.name === "Workspace & Office" ? "Workspace" : room.name)}`}
                       className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-soft-beige underline underline-offset-4"
                     >
-                      Browse {room.name} Catalog
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
+                      <span>Browse {room.name} Catalog</span>
+                      <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
                 </div>
@@ -126,7 +125,7 @@ export default function CollectionsPage() {
             Product Categories
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
@@ -153,9 +152,7 @@ export default function CollectionsPage() {
                     <p className="text-xs text-warm-gray">{cat.description}</p>
                   </div>
                   <span className="w-8 h-8 rounded-full bg-ivory flex items-center justify-center text-charcoal group-hover:bg-walnut group-hover:text-white transition-all shrink-0 ml-3">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </Link>

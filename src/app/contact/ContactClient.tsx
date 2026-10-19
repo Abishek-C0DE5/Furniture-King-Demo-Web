@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { siteConfig, getWhatsAppLink } from "@/lib/config";
 import { categories, products } from "@/lib/products";
+import { MessageCircle, Phone, Mail, ExternalLink, Check } from "lucide-react";
 
 export default function ContactClient() {
   const searchParams = useSearchParams();
@@ -112,9 +113,7 @@ export default function ContactClient() {
             className="flex items-start gap-4 p-5 rounded-xl border border-soft-beige bg-white hover:border-walnut/50 hover:shadow-xs transition-all no-underline group"
           >
             <div className="w-12 h-12 rounded-lg bg-green-50 text-green-700 flex items-center justify-center shrink-0">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-              </svg>
+              <MessageCircle className="w-5 h-5 text-green-700" />
             </div>
             <div>
               <span className="text-xs uppercase tracking-wider text-green-800 font-semibold block">
@@ -135,9 +134,7 @@ export default function ContactClient() {
             className="flex items-start gap-4 p-5 rounded-xl border border-soft-beige bg-white hover:border-walnut/50 hover:shadow-xs transition-all no-underline group"
           >
             <div className="w-12 h-12 rounded-lg bg-ivory text-charcoal flex items-center justify-center shrink-0">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-              </svg>
+              <Phone className="w-5 h-5 text-walnut" />
             </div>
             <div>
               <span className="text-xs uppercase tracking-wider text-warm-gray font-medium block">
@@ -158,10 +155,7 @@ export default function ContactClient() {
             className="flex items-start gap-4 p-5 rounded-xl border border-soft-beige bg-white hover:border-walnut/50 hover:shadow-xs transition-all no-underline group"
           >
             <div className="w-12 h-12 rounded-lg bg-ivory text-charcoal flex items-center justify-center shrink-0">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
+              <Mail className="w-5 h-5 text-walnut" />
             </div>
             <div>
               <span className="text-xs uppercase tracking-wider text-warm-gray font-medium block">
@@ -190,11 +184,7 @@ export default function ContactClient() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-soft-beige text-xs font-medium text-charcoal hover:border-walnut transition-all no-underline"
             >
               <span>Instagram</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
+              <ExternalLink className="w-3 h-3 text-warm-gray" />
             </a>
             <a
               href={siteConfig.tiktok}
@@ -203,11 +193,7 @@ export default function ContactClient() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-soft-beige text-xs font-medium text-charcoal hover:border-walnut transition-all no-underline"
             >
               <span>TikTok</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
+              <ExternalLink className="w-3 h-3 text-warm-gray" />
             </a>
           </div>
         </div>
@@ -232,9 +218,7 @@ export default function ContactClient() {
           {submitted ? (
             <div className="p-6 rounded-xl bg-green-50/80 border border-green-200 text-center space-y-4">
               <div className="w-12 h-12 rounded-full bg-green-100 text-green-700 flex items-center justify-center mx-auto">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
+                <Check className="w-6 h-6" />
               </div>
               <h3 className="font-semibold text-charcoal text-lg">Inquiry Successfully Received!</h3>
               <p className="text-sm text-charcoal/80 max-w-md mx-auto">
@@ -245,10 +229,8 @@ export default function ContactClient() {
                   onClick={handleWhatsAppHandoff}
                   className="px-5 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-all inline-flex items-center gap-2"
                 >
+                  <MessageCircle className="w-4 h-4" />
                   <span>Also Send via WhatsApp</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
                 </button>
                 <button
                   onClick={() => {
@@ -402,10 +384,8 @@ export default function ContactClient() {
                   onClick={handleWhatsAppHandoff}
                   className="w-full sm:w-auto px-5 py-3 rounded-lg border border-green-600 text-green-700 hover:bg-green-50 text-xs font-medium tracking-wide uppercase transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
                 >
+                  <MessageCircle className="w-4 h-4" />
                   <span>Or Send via WhatsApp</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
                 </button>
               </div>
 

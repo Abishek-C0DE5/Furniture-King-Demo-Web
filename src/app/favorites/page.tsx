@@ -5,6 +5,7 @@ import { products } from "@/lib/products";
 import { useFavorites } from "@/hooks/useFavorites";
 import ProductCard from "@/components/ProductCard";
 import { getWhatsAppLink } from "@/lib/config";
+import { Heart, MessageCircle } from "lucide-react";
 
 export default function FavoritesPage() {
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
@@ -20,10 +21,10 @@ export default function FavoritesPage() {
   };
 
   return (
-    <div className="pt-28 pb-20">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+    <div className="pt-24 sm:pt-28 pb-14 sm:pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 border-b border-soft-beige pb-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8 sm:mb-12 border-b border-soft-beige pb-6 sm:pb-8">
           <div>
             <span className="text-xs uppercase tracking-widest text-walnut font-medium mb-2 block">
               Your Shortlist
@@ -46,15 +47,13 @@ export default function FavoritesPage() {
           </div>
 
           {favoriteProducts.length > 0 && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               <button
                 onClick={handleInquireAllFavorites}
-                className="btn-primary no-underline text-xs inline-flex items-center gap-2 cursor-pointer"
+                className="btn-primary no-underline text-xs inline-flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
               >
+                <MessageCircle className="w-4 h-4" />
                 <span>Enquire All on WhatsApp</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
               </button>
             </div>
           )}
@@ -62,7 +61,7 @@ export default function FavoritesPage() {
 
         {/* Product Grid or Empty State */}
         {favoriteProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {favoriteProducts.map((product) => (
               <ProductCard
                 key={product.id}
@@ -75,9 +74,7 @@ export default function FavoritesPage() {
         ) : (
           <div className="text-center py-24 px-6 rounded-2xl bg-white border border-soft-beige max-w-lg mx-auto">
             <div className="w-16 h-16 rounded-full bg-ivory text-walnut flex items-center justify-center mx-auto mb-4">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
+              <Heart className="w-8 h-8 text-walnut" />
             </div>
             <h2
               style={{ fontFamily: "var(--font-serif)" }}

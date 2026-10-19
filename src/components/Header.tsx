@@ -3,11 +3,24 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { siteConfig, navLinks, getWhatsAppLink } from "@/lib/config";
+import { Search, Heart, Menu, X, Phone, Mail, ShoppingBag } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { totalItems, openCart, closeCart } = useCart();
+
+  const handleOpenCart = () => {
+    setMobileOpen(false);
+    openCart();
+  };
+
+  const handleOpenMobileMenu = () => {
+    closeCart();
+    setMobileOpen(true);
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -28,23 +41,49 @@ export default function Header() {
 
   return (
     <>
-      {/* Announcement Bar */}
-      <div className="announcement-bar">
-        <span>{siteConfig.announcementText}</span>
+      {/* Announcement Bar — Infinite Right-to-Left Ticker */}
+      <div className="announcement-bar overflow-hidden relative" role="region" aria-label="Announcement">
+        <a
+          href={getWhatsAppLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="marquee-track flex whitespace-nowrap no-underline cursor-pointer"
+          title="Click to chat with us on WhatsApp"
+        >
+          {/* Primary Track Content */}
+          <div className="marquee-content flex items-center shrink-0">
+            {[1, 2, 3, 4].map((i) => (
+              <span key={`item-${i}`} className="inline-flex items-center gap-4 px-6 text-stone hover:text-white transition-colors">
+                <span>{siteConfig.announcementText}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80 inline-block shrink-0" />
+              </span>
+            ))}
+          </div>
+
+          {/* Duplicated Track Content for Seamless Infinite Loop */}
+          <div className="marquee-content flex items-center shrink-0" aria-hidden="true">
+            {[1, 2, 3, 4].map((i) => (
+              <span key={`dup-${i}`} className="inline-flex items-center gap-4 px-6 text-stone hover:text-white transition-colors">
+                <span>{siteConfig.announcementText}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80 inline-block shrink-0" />
+              </span>
+            ))}
+          </div>
+        </a>
       </div>
 
       {/* Header */}
       <header className={`nav-header ${scrolled ? "scrolled" : ""}`}>
         <div
-          className="flex items-center justify-between px-6 lg:px-12"
+          className="flex items-center justify-between px-3 sm:px-6 lg:px-12"
           style={{ height: "68px" }}
         >
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 no-underline">
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-2 no-underline shrink-0">
             <span
               style={{
                 fontFamily: "var(--font-serif)",
-                fontSize: "1.35rem",
+                fontSize: "clamp(1.05rem, 3.8vw, 1.35rem)",
                 color: "var(--color-charcoal)",
                 letterSpacing: "-0.02em",
               }}
@@ -53,11 +92,11 @@ export default function Header() {
             </span>
             <span
               style={{
-                fontSize: "0.65rem",
+                fontSize: "0.6rem",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 color: "var(--color-walnut)",
-                fontWeight: 500,
+                fontWeight: 600,
                 marginTop: "2px",
               }}
             >
@@ -83,18 +122,28 @@ export default function Header() {
               aria-label="Search products"
               style={{ background: "none", border: "none", cursor: "pointer" }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8" />
-                <path d="M21 21l-4.35-4.35" />
-              </svg>
+              <Search className="w-5 h-5" />
             </button>
 
             {/* Favorites */}
             <Link href="/favorites" className="p-2 hover:text-walnut transition-colors no-underline" aria-label="View favorites">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
+              <Heart className="w-5 h-5" />
             </Link>
+
+            {/* Shopping Cart Drawer Trigger */}
+            <button
+              onClick={openCart}
+              className="p-2 hover:text-walnut transition-colors relative"
+              aria-label={`View shopping cart with ${totalItems} items`}
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-walnut text-white text-[10px] font-bold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
 
             {/* WhatsApp */}
             <a
@@ -111,24 +160,56 @@ export default function Header() {
             </a>
           </div>
 
-          {/* Mobile Hamburger */}
-          <button
-            className="lg:hidden p-2"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          </button>
+          {/* Mobile Actions: Search + Favorites + Cart + Hamburger */}
+          <div className="flex lg:hidden items-center gap-0.5 sm:gap-1">
+            <button
+              onClick={() => {
+                closeCart();
+                setSearchOpen(!searchOpen);
+              }}
+              className="w-9 h-9 flex items-center justify-center text-charcoal hover:text-walnut transition-colors rounded-full"
+              aria-label="Search products"
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              <Search className="w-5 h-5" />
+            </button>
+
+            <Link
+              href="/favorites"
+              className="w-9 h-9 flex items-center justify-center text-charcoal hover:text-walnut transition-colors no-underline rounded-full"
+              aria-label="View favorites"
+            >
+              <Heart className="w-5 h-5" />
+            </Link>
+
+            <button
+              onClick={handleOpenCart}
+              className="w-9 h-9 flex items-center justify-center text-charcoal hover:text-walnut transition-colors relative rounded-full"
+              aria-label={`View shopping cart with ${totalItems} items`}
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-walnut text-white text-[9px] font-bold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center shadow-xs">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
+            <button
+              className="w-9 h-9 flex items-center justify-center text-charcoal hover:text-walnut transition-colors rounded-full"
+              onClick={handleOpenMobileMenu}
+              aria-label="Open menu"
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Search Bar */}
         {searchOpen && (
-          <div className="px-6 lg:px-12 pb-4 animate-fade-in">
+          <div className="px-4 sm:px-6 lg:px-12 pb-4 animate-fade-in">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -141,18 +222,9 @@ export default function Header() {
               }}
             >
               <div className="relative max-w-xl mx-auto">
-                <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="var(--color-warm-gray)"
-                  strokeWidth="2"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="M21 21l-4.35-4.35" />
-                </svg>
+                <Search
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-warm-gray"
+                />
                 <input
                   name="q"
                   type="text"
@@ -180,7 +252,7 @@ export default function Header() {
         aria-modal="true"
         aria-label="Mobile navigation"
       >
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-6">
           <span
             style={{
               fontFamily: "var(--font-serif)",
@@ -195,12 +267,33 @@ export default function Header() {
             aria-label="Close menu"
             style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            <X className="w-6 h-6" />
           </button>
         </div>
+
+        {/* Mobile Search */}
+        <form
+          className="mb-6"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const q = formData.get("mobile-q") as string;
+            if (q && typeof q === "string" && q.trim()) {
+              window.location.href = `/shop?search=${encodeURIComponent(q.trim())}`;
+              setMobileOpen(false);
+            }
+          }}
+        >
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-warm-gray" />
+            <input
+              name="mobile-q"
+              type="text"
+              className="search-input text-xs py-2 pl-9 pr-3"
+              placeholder="Search sofas, beds, tables..."
+            />
+          </div>
+        </form>
 
         <nav className="flex flex-col gap-1">
           {navLinks.map((link) => (
@@ -220,12 +313,23 @@ export default function Header() {
         </nav>
 
         <div className="mt-8 flex flex-col gap-3">
+          <button
+            onClick={() => {
+              setMobileOpen(false);
+              openCart();
+            }}
+            className="btn-primary no-underline text-center inline-flex items-center justify-center gap-2 cursor-pointer w-full"
+          >
+            <ShoppingBag className="w-4 h-4" />
+            <span>Shopping Bag ({totalItems})</span>
+          </button>
           <Link
             href="/favorites"
             onClick={() => setMobileOpen(false)}
-            className="btn-outline no-underline text-center"
+            className="btn-outline no-underline text-center inline-flex items-center justify-center gap-2"
           >
-            ♡ Favorites
+            <Heart className="w-4 h-4" />
+            Favorites
           </Link>
           <a
             href={getWhatsAppLink()}
@@ -238,14 +342,16 @@ export default function Header() {
         </div>
 
         <div className="mt-8 text-sm" style={{ color: "var(--color-warm-gray)" }}>
-          <p className="mb-1">
-            <a href={`tel:${siteConfig.phoneIntl}`} className="no-underline" style={{ color: "var(--color-warm-gray)" }}>
-              📞 {siteConfig.phone}
+          <p className="mb-2">
+            <a href={`tel:${siteConfig.phoneIntl}`} className="no-underline inline-flex items-center gap-2" style={{ color: "var(--color-warm-gray)" }}>
+              <Phone className="w-4 h-4 text-walnut" />
+              {siteConfig.phone}
             </a>
           </p>
           <p>
-            <a href={`mailto:${siteConfig.email}`} className="no-underline" style={{ color: "var(--color-warm-gray)" }}>
-              ✉️ {siteConfig.email}
+            <a href={`mailto:${siteConfig.email}`} className="no-underline inline-flex items-center gap-2" style={{ color: "var(--color-warm-gray)" }}>
+              <Mail className="w-4 h-4 text-walnut" />
+              {siteConfig.email}
             </a>
           </p>
         </div>

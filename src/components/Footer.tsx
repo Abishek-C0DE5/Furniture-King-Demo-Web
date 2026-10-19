@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { siteConfig, getWhatsAppLink } from "@/lib/config";
 import { categories } from "@/lib/products";
+import { Phone, Mail, Globe, MessageCircle } from "lucide-react";
 
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
             <h3
@@ -106,6 +107,7 @@ export default function Footer() {
               <li><Link href="/about" style={{ fontSize: "0.88rem" }} className="no-underline">About Us</Link></li>
               <li><Link href="/contact" style={{ fontSize: "0.88rem" }} className="no-underline">Contact</Link></li>
               <li><Link href="/favorites" style={{ fontSize: "0.88rem" }} className="no-underline">My Favorites</Link></li>
+              <li><Link href="/cart" style={{ fontSize: "0.88rem" }} className="no-underline">Shopping Bag</Link></li>
             </ul>
           </div>
 
@@ -156,23 +158,27 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3" style={{ listStyle: "none", padding: 0, fontSize: "0.88rem" }}>
               <li>
-                <a href={`tel:${siteConfig.phoneIntl}`} className="no-underline">
-                  📞 {siteConfig.phone}
+                <a href={`tel:${siteConfig.phoneIntl}`} className="no-underline inline-flex items-center gap-2.5">
+                  <Phone className="w-4 h-4 text-walnut" />
+                  <span>{siteConfig.phone}</span>
                 </a>
               </li>
               <li>
-                <a href={`mailto:${siteConfig.email}`} className="no-underline">
-                  ✉️ {siteConfig.email}
+                <a href={`mailto:${siteConfig.email}`} className="no-underline inline-flex items-center gap-2.5">
+                  <Mail className="w-4 h-4 text-walnut" />
+                  <span>{siteConfig.email}</span>
                 </a>
               </li>
               <li>
-                <a href={siteConfig.website} target="_blank" rel="noopener noreferrer" className="no-underline">
-                  🌐 furnitureking.com.np
+                <a href={siteConfig.website} target="_blank" rel="noopener noreferrer" className="no-underline inline-flex items-center gap-2.5">
+                  <Globe className="w-4 h-4 text-walnut" />
+                  <span>furnitureking.com.np</span>
                 </a>
               </li>
               <li>
-                <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="no-underline">
-                  💬 Chat on WhatsApp
+                <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="no-underline inline-flex items-center gap-2.5">
+                  <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                  <span>Chat on WhatsApp</span>
                 </a>
               </li>
             </ul>
@@ -181,13 +187,13 @@ export default function Footer() {
 
         {/* Bottom */}
         <div
-          className="mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4"
+          className="mt-8 pt-5 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left"
           style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}
         >
           <p style={{ fontSize: "0.8rem", color: "var(--color-warm-gray)" }}>
             © {new Date().getFullYear()} {siteConfig.businessName}. All rights reserved.
           </p>
-          <div className="flex gap-6" style={{ fontSize: "0.8rem" }}>
+          <div className="flex flex-wrap gap-4 sm:gap-6 justify-center md:justify-end" style={{ fontSize: "0.8rem" }}>
             <Link href="/privacy" className="no-underline" style={{ color: "var(--color-warm-gray)" }}>
               Privacy Policy
             </Link>

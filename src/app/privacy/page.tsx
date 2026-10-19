@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/config";
+import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: `Privacy Policy | ${siteConfig.businessName}`,
@@ -89,8 +90,9 @@ export default function PrivacyPage() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-soft-beige">
-          <Link href="/shop" className="text-sm font-medium text-walnut hover:underline">
-            &larr; Return to Furniture Catalog
+          <Link href="/shop" className="text-sm font-medium text-walnut hover:underline inline-flex items-center gap-1.5">
+            <ArrowLeft className="w-4 h-4" />
+            <span>Return to Furniture Catalog</span>
           </Link>
         </div>
       </div>
