@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { siteConfig, navLinks, getWhatsAppLink } from "@/lib/config";
-import { Search, Heart, Menu, X, Phone, Mail } from "lucide-react";
+import { Search, Heart, Menu, X, Phone, Mail, ShoppingBag } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { totalItems, openCart } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -118,6 +120,21 @@ export default function Header() {
               <Heart className="w-5 h-5" />
             </Link>
 
+            {/* Shopping Cart Drawer Trigger */}
+            <button
+              onClick={openCart}
+              className="p-2 hover:text-walnut transition-colors relative"
+              aria-label={`View shopping cart with ${totalItems} items`}
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-walnut text-white text-[10px] font-bold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
             {/* WhatsApp */}
             <a
               href={getWhatsAppLink()}
@@ -133,7 +150,7 @@ export default function Header() {
             </a>
           </div>
 
-          {/* Mobile Actions: Search + Favorites + Hamburger */}
+          {/* Mobile Actions: Search + Favorites + Cart + Hamburger */}
           <div className="flex lg:hidden items-center gap-0.5 sm:gap-1">
             <button
               onClick={() => setSearchOpen(!searchOpen)}
@@ -151,6 +168,20 @@ export default function Header() {
             >
               <Heart className="w-5 h-5" />
             </Link>
+
+            <button
+              onClick={openCart}
+              className="p-2 text-charcoal hover:text-walnut transition-colors relative"
+              aria-label={`View shopping cart with ${totalItems} items`}
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-walnut text-white text-[10px] font-bold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
 
             <button
               className="p-2 text-charcoal hover:text-walnut transition-colors"
@@ -269,6 +300,16 @@ export default function Header() {
         </nav>
 
         <div className="mt-8 flex flex-col gap-3">
+          <button
+            onClick={() => {
+              setMobileOpen(false);
+              openCart();
+            }}
+            className="btn-primary no-underline text-center inline-flex items-center justify-center gap-2 cursor-pointer w-full"
+          >
+            <ShoppingBag className="w-4 h-4" />
+            <span>Shopping Bag ({totalItems})</span>
+          </button>
           <Link
             href="/favorites"
             onClick={() => setMobileOpen(false)}

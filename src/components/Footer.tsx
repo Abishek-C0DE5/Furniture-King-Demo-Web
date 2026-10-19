@@ -107,6 +107,7 @@ export default function Footer() {
               <li><Link href="/about" style={{ fontSize: "0.88rem" }} className="no-underline">About Us</Link></li>
               <li><Link href="/contact" style={{ fontSize: "0.88rem" }} className="no-underline">Contact</Link></li>
               <li><Link href="/favorites" style={{ fontSize: "0.88rem" }} className="no-underline">My Favorites</Link></li>
+              <li><Link href="/cart" style={{ fontSize: "0.88rem" }} className="no-underline">Shopping Bag</Link></li>
             </ul>
           </div>
 

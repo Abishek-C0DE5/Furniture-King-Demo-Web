@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { products, categories, searchProducts, getAllStyles, getAllRooms } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import { useFavorites } from "@/hooks/useFavorites";
-import { Search, X, SlidersHorizontal } from "lucide-react";
+import { Search, X, SlidersHorizontal, Check } from "lucide-react";
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -17,6 +17,7 @@ function ShopContent() {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [activeRoom, setActiveRoom] = useState(initialRoom);
   const [activeStyle, setActiveStyle] = useState("");
+  const [priceRange, setPriceRange] = useState<"all" | "under-50k" | "50k-100k" | "above-100k">("all");
   const [sortBy, setSortBy] = useState("featured");
   const [showFilters, setShowFilters] = useState(false);
 
@@ -38,7 +39,25 @@ function ShopContent() {
       result = result.filter((p) => p.style === activeStyle);
     }
 
+    // Price range filtering
+    if (priceRange === "under-50k") {
+      result = result.filter((p) => p.price < 50000);
+    } else if (priceRange === "50k-100k") {
+      result = result.filter((p) => p.price >= 50000 && p.price <= 100000);
+    } else if (priceRange === "above-100k") {
+      result = result.filter((p) => p.price > 100000);
+    }
+
     switch (sortBy) {
+      case "price-asc":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case "rating":
+        result.sort((a, b) => b.rating - a.rating);
+        break;
       case "newest":
         result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
@@ -52,14 +71,15 @@ function ShopContent() {
     }
 
     return result;
-  }, [searchQuery, activeCategory, activeRoom, activeStyle, sortBy]);
+  }, [searchQuery, activeCategory, activeRoom, activeStyle, priceRange, sortBy]);
 
-  const hasActiveFilters = activeCategory || activeRoom || activeStyle;
+  const hasActiveFilters = activeCategory || activeRoom || activeStyle || priceRange !== "all";
 
   function clearAllFilters() {
     setActiveCategory("");
     setActiveRoom("");
     setActiveStyle("");
+    setPriceRange("all");
     setSearchQuery("");
   }
 
@@ -88,10 +108,10 @@ function ShopContent() {
             marginBottom: "0.75rem",
           }}
         >
-          Shop Furniture
+          Explore Luxury Furniture
         </h1>
         <p style={{ color: "var(--color-warm-gray)", maxWidth: "480px", margin: "0 auto", fontSize: "0.95rem" }}>
-          Explore our full collection. Use filters to find exactly what you&apos;re looking for.
+          Handcrafted royal furniture crafted with seasoned hardwood. White-glove delivery across Nepal.
         </p>
       </div>
 
@@ -118,15 +138,14 @@ function ShopContent() {
             <input
               type="text"
               className="search-input"
-              placeholder="Search by name, material, category..."
+              placeholder="Search by name, wood, room, style..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
               <button
-                className="absolute right-3 top-1/2 -translate-y-1/2"
                 onClick={() => setSearchQuery("")}
-                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2"
                 style={{ background: "none", border: "none", cursor: "pointer", color: "var(--color-warm-gray)" }}
               >
                 <X className="w-4 h-4" />
@@ -138,12 +157,16 @@ function ShopContent() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="form-input flex-1 sm:flex-initial"
-              style={{ minWidth: "130px" }}
+              className="form-input flex-1 sm:flex-initial text-xs py-2 px-3 rounded border border-border bg-white"
+              style={{ minWidth: "160px" }}
+              aria-label="Sort products"
             >
-              <option value="featured">Featured</option>
-              <option value="newest">Newest</option>
-              <option value="name-asc">Name A–Z</option>
+              <option value="featured">Featured First</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating">Highest Rated</option>
+              <option value="newest">Newest Arrivals</option>
+              <option value="name-asc">Name: A to Z</option>
             </select>
 
             <button
@@ -169,12 +192,57 @@ function ShopContent() {
               {hasActiveFilters && (
                 <button
                   onClick={clearAllFilters}
-                  className="mb-4 text-sm font-medium underline"
+                  className="mb-4 text-xs font-semibold uppercase tracking-wider underline block"
                   style={{ color: "var(--color-walnut)", background: "none", border: "none", cursor: "pointer" }}
                 >
                   Clear all filters
                 </button>
               )}
+
+              {/* Price Filter */}
+              <div className="mb-6">
+                <h4
+                  style={{
+                    fontSize: "0.75rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    fontWeight: 600,
+                    marginBottom: "0.75rem",
+                  }}
+                >
+                  Price Range
+                </h4>
+                <div className="flex flex-col gap-1.5">
+                  <button
+                    className={`filter-chip ${priceRange === "all" ? "active" : ""}`}
+                    onClick={() => setPriceRange("all")}
+                    style={{ justifyContent: "flex-start" }}
+                  >
+                    All Prices
+                  </button>
+                  <button
+                    className={`filter-chip ${priceRange === "under-50k" ? "active" : ""}`}
+                    onClick={() => setPriceRange("under-50k")}
+                    style={{ justifyContent: "flex-start" }}
+                  >
+                    Under Rs. 50,000
+                  </button>
+                  <button
+                    className={`filter-chip ${priceRange === "50k-100k" ? "active" : ""}`}
+                    onClick={() => setPriceRange("50k-100k")}
+                    style={{ justifyContent: "flex-start" }}
+                  >
+                    Rs. 50,000 – Rs. 1,00,000
+                  </button>
+                  <button
+                    className={`filter-chip ${priceRange === "above-100k" ? "active" : ""}`}
+                    onClick={() => setPriceRange("above-100k")}
+                    style={{ justifyContent: "flex-start" }}
+                  >
+                    Above Rs. 1,00,000
+                  </button>
+                </div>
+              </div>
 
               {/* Category */}
               <div className="mb-6">
@@ -278,13 +346,28 @@ function ShopContent() {
               className="mb-4"
               style={{ fontSize: "0.85rem", color: "var(--color-warm-gray)" }}
             >
-              {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}{" "}
+              Showing {filteredProducts.length} piece{filteredProducts.length !== 1 ? "s" : ""}{" "}
               {searchQuery ? `for "${searchQuery}"` : ""}
             </p>
 
             {/* Active filter tags */}
             {hasActiveFilters && (
               <div className="flex flex-wrap gap-2 mb-4">
+                {priceRange !== "all" && (
+                  <span
+                    className="filter-chip active inline-flex items-center gap-1.5 cursor-pointer"
+                    onClick={() => setPriceRange("all")}
+                  >
+                    <span>
+                      {priceRange === "under-50k"
+                        ? "Under Rs. 50k"
+                        : priceRange === "50k-100k"
+                        ? "Rs. 50k – 100k"
+                        : "Above Rs. 100k"}
+                    </span>
+                    <X className="w-3.5 h-3.5" />
+                  </span>
+                )}
                 {activeCategory && (
                   <span className="filter-chip active inline-flex items-center gap-1.5" onClick={() => setActiveCategory("")} style={{ cursor: "pointer" }}>
                     <span>{categories.find((c) => c.slug === activeCategory)?.name}</span>
@@ -306,8 +389,18 @@ function ShopContent() {
               </div>
             )}
 
-            {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-16 px-4">
+                <p className="font-serif text-2xl text-charcoal mb-2">No furniture pieces matched your criteria</p>
+                <p className="text-sm text-warm-gray mb-6">
+                  Try broadening your price filters or searching for alternative terms.
+                </p>
+                <button onClick={clearAllFilters} className="btn-outline">
+                  Reset All Filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id}
@@ -316,24 +409,6 @@ function ShopContent() {
                     onToggleFavorite={toggle}
                   />
                 ))}
-              </div>
-            ) : (
-              <div className="text-center py-20">
-                <p
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "1.5rem",
-                    marginBottom: "0.75rem",
-                  }}
-                >
-                  No furniture found
-                </p>
-                <p style={{ color: "var(--color-warm-gray)", marginBottom: "1.5rem" }}>
-                  Try adjusting your search or filters to find what you&apos;re looking for.
-                </p>
-                <button onClick={clearAllFilters} className="btn-outline">
-                  Clear Filters
-                </button>
               </div>
             )}
           </div>
@@ -345,7 +420,13 @@ function ShopContent() {
 
 export default function ShopPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p>Loading...</p></div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <p className="text-sm text-warm-gray">Loading Furniture King Catalog...</p>
+        </div>
+      }
+    >
       <ShopContent />
     </Suspense>
   );
