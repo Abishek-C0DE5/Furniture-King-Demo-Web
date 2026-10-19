@@ -842,3 +842,101 @@
 .animate-float-3d {
   animation: floatSlow 6s ease-in-out infinite;
 }
+
+/* ===== DEDICATED RECEIPT PRINT STYLES ===== */
+@media print {
+  /* Hide all website chrome, navigations, footers, drawer, floating buttons, action bars */
+  header,
+  nav,
+  footer,
+  .announcement-bar,
+  .nav-header,
+  .footer,
+  .whatsapp-float,
+  .no-print,
+  .print-hidden,
+  aside,
+  [role="dialog"],
+  .breadcrumbs {
+    display: none !important;
+  }
+
+  /* Page & body reset for pristine print quality */
+  html,
+  body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 10.5pt !important;
+    line-height: 1.4 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Strip page wrapper padding and shadows */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    width: 100% !important;
+  }
+
+  .print-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    background: transparent !important;
+    min-height: auto !important;
+  }
+
+  /* Receipt Card formatting */
+  #printable-receipt {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 16px !important;
+    border: 1.5px solid #25231f !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-hidden {
+    display: none !important;
+  }
+
+  .print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .print-table th,
+  .print-table td {
+    border: 1px solid #d1d5db !important;
+    padding: 6px 8px !important;
+  }
+
+  .print-table th {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+    font-weight: 600 !important;
+  }
+
+  tr,
+  .print-avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  @page {
+    margin: 10mm;
+    size: A4 portrait;
+  }
+}

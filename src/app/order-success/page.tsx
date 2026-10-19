@@ -16,6 +16,8 @@ import {
   ArrowRight,
   Printer,
   ShoppingBag,
+  Clock,
+  Award,
 } from "lucide-react";
 
 interface OrderData {
@@ -40,6 +42,7 @@ interface OrderData {
       images: string[];
       sku: string;
       category: string;
+      warranty?: string;
     };
     quantity: number;
     selectedColor?: string;
@@ -76,11 +79,23 @@ function OrderSuccessContent() {
     const itemsText = order.items
       .map(
         (i, idx) =>
-          `${idx + 1}. *${i.product.name}* (Qty: ${i.quantity}${i.selectedColor ? `, Finish: ${i.selectedColor}` : ""}) — ${formatPrice(i.product.price * i.quantity)}`
+          `${idx + 1}. *${i.product.name}* (Qty: ${i.quantity}${
+            i.selectedColor ? `, Finish: ${i.selectedColor}` : ""
+          }) — ${formatPrice(i.product.price * i.quantity)}`
       )
       .join("\n");
 
-    const text = `*ORDER CONFIRMATION RECEIPT — FURNITURE KING NEPAL*\n\n*Order ID:* ${order.orderId}\n*Customer:* ${order.customer.fullName}\n*Phone:* ${order.customer.phone}\n*Delivery Address:* ${order.customer.address}, ${order.customer.landmark}, ${order.customer.city}\n\n*Ordered Items:*\n${itemsText}\n\n*Subtotal:* ${formatPrice(order.subtotal)}${order.discount > 0 ? `\n*Discount:* -${formatPrice(order.discount)} (${order.couponCode})` : ""}\n*Delivery Fee:* ${order.deliveryFee === 0 ? "FREE" : formatPrice(order.deliveryFee)}\n*Total Amount:* ${formatPrice(order.total)}\n*Payment Method:* ${order.paymentMethod.toUpperCase()}\n\nPlease verify this order for white-glove dispatch. Thank you!`;
+    const text = `*ORDER CONFIRMATION RECEIPT — FURNITURE KING NEPAL*\n\n*Order ID:* ${
+      order.orderId
+    }\n*Customer:* ${order.customer.fullName}\n*Phone:* ${
+      order.customer.phone
+    }\n*Delivery Address:* ${order.customer.address}, ${order.customer.landmark}, ${
+      order.customer.city
+    }\n\n*Ordered Items:*\n${itemsText}\n\n*Subtotal:* ${formatPrice(order.subtotal)}${
+      order.discount > 0 ? `\n*Discount:* -${formatPrice(order.discount)} (${order.couponCode})` : ""
+    }\n*Delivery Fee:* ${
+      order.deliveryFee === 0 ? "FREE" : formatPrice(order.deliveryFee)
+    }\n*Total Amount:* ${formatPrice(order.total)}\n*Payment Method:* ${order.paymentMethod.toUpperCase()}\n\nPlease verify this order for white-glove dispatch. Thank you!`;
 
     return `https://wa.me/${siteConfig.phoneIntl}?text=${encodeURIComponent(text)}`;
   };
@@ -89,13 +104,60 @@ function OrderSuccessContent() {
     window.print();
   };
 
+  const formattedDate = order?.createdAt
+    ? new Date(order.createdAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
   return (
-    <div className="min-h-screen py-10 sm:py-16 px-4 sm:px-6 lg:px-12 bg-ivory">
+    <div className="print-container min-h-screen py-8 sm:py-14 px-4 sm:px-6 lg:px-12 bg-ivory">
       <div className="max-w-4xl mx-auto">
-        {/* Success Card */}
-        <div className="bg-white rounded-xl border border-border shadow-lg p-6 sm:p-10 mb-8">
-          {/* Header Banner */}
-          <div className="text-center pb-8 border-b border-border">
+        {/* Printable Receipt Card */}
+        <div
+          id="printable-receipt"
+          className="bg-white rounded-xl border border-border shadow-lg p-6 sm:p-10 mb-8"
+        >
+          {/* Print-Only Official Letterhead Header */}
+          <div className="hidden print:block pb-5 mb-5 border-b-2 border-charcoal">
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="font-serif text-2xl font-bold tracking-tight text-charcoal">
+                  FURNITURE KING NEPAL
+                </h1>
+                <p className="text-xs uppercase tracking-widest text-walnut font-medium mt-0.5">
+                  Artisan Handcrafted Hardwood & Luxury Living
+                </p>
+                <p className="text-[11px] text-warm-gray mt-1">
+                  Showroom: Kathmandu & Lalitpur, Nepal • Phone: +977-9864835160
+                </p>
+                <p className="text-[11px] text-warm-gray">
+                  Email: info@furniturekingnepal.com • Web: furniturekingnepal.com
+                </p>
+              </div>
+
+              <div className="text-right">
+                <span className="inline-block px-3 py-1 bg-stone/50 border border-charcoal text-xs font-bold uppercase tracking-wider text-charcoal">
+                  Official Invoice & Warranty
+                </span>
+                <p className="text-xs font-mono font-bold text-charcoal mt-2">
+                  Invoice No: {order?.orderId || orderIdParam || "FKN-2026-CONFIRMED"}
+                </p>
+                <p className="text-[11px] text-warm-gray">Date: {formattedDate}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Screen Banner (Hidden when printing) */}
+          <div className="no-print print-hidden text-center pb-8 border-b border-border">
             <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="w-10 h-10" />
             </div>
@@ -109,17 +171,20 @@ function OrderSuccessContent() {
               Thank You{order ? `, ${order.customer.fullName}` : ""}!
             </h1>
             <p className="text-xs sm:text-sm text-warm-gray max-w-lg mx-auto">
-              Your royal furniture order has been received. Our team will contact you to coordinate white-glove delivery & room assembly.
+              Your royal furniture order has been received. Our team will contact you to coordinate
+              white-glove delivery & room assembly.
             </p>
 
             <div className="mt-4 inline-flex items-center gap-2 bg-stone/40 px-3.5 py-1.5 rounded-full text-xs text-charcoal font-medium">
               <span>Order Reference:</span>
-              <strong className="text-walnut font-mono">{order?.orderId || orderIdParam || "FKN-2026-CONFIRMED"}</strong>
+              <strong className="text-walnut font-mono">
+                {order?.orderId || orderIdParam || "FKN-2026-CONFIRMED"}
+              </strong>
             </div>
           </div>
 
           {/* Key Details Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-6 border-b border-border text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-5 border-b border-border text-xs print-avoid-break">
             <div className="p-3.5 bg-ivory rounded border border-border/80">
               <div className="flex items-center gap-2 text-walnut font-semibold mb-1">
                 <Truck className="w-4 h-4" />
@@ -136,8 +201,10 @@ function OrderSuccessContent() {
                 <Phone className="w-4 h-4" />
                 <span>Delivery Contact</span>
               </div>
-              <p className="text-charcoal font-medium">{order?.customer.phone || siteConfig.phone}</p>
-              <p className="text-[11px] text-warm-gray mt-0.5">Our driver calls 1 hour prior</p>
+              <p className="text-charcoal font-medium">
+                {order?.customer.phone || siteConfig.phone}
+              </p>
+              <p className="text-[11px] text-warm-gray mt-0.5">Recipient: {order?.customer.fullName || "Customer"}</p>
             </div>
 
             <div className="p-3.5 bg-ivory rounded border border-border/80">
@@ -156,10 +223,10 @@ function OrderSuccessContent() {
             </div>
           </div>
 
-          {/* Delivery Address Details */}
+          {/* Delivery Destination Address */}
           {order && (
-            <div className="py-6 border-b border-border text-xs">
-              <div className="flex items-center gap-2 text-charcoal font-semibold mb-2">
+            <div className="py-4 border-b border-border text-xs print-avoid-break">
+              <div className="flex items-center gap-2 text-charcoal font-semibold mb-1.5">
                 <MapPin className="w-4 h-4 text-walnut" />
                 <span>Delivery Address & Destination</span>
               </div>
@@ -168,71 +235,131 @@ function OrderSuccessContent() {
               </p>
               {order.customer.notes && (
                 <p className="text-warm-gray text-[11px] mt-1 italic">
-                  Note: &quot;{order.customer.notes}&quot;
+                  Delivery Instruction: &quot;{order.customer.notes}&quot;
                 </p>
               )}
             </div>
           )}
 
-          {/* Purchased Items List */}
+          {/* Purchased Items Table */}
           {order && order.items.length > 0 && (
-            <div className="py-6 border-b border-border">
-              <h3 className="font-serif text-lg text-charcoal mb-4">Purchased Items</h3>
-              <div className="divide-y divide-border/80">
-                {order.items.map((item, idx) => (
-                  <div key={idx} className="py-3 flex items-center justify-between gap-4 text-xs">
-                    <div className="flex items-center gap-3">
-                      <div className="w-14 h-14 relative shrink-0 rounded overflow-hidden bg-light-gray border border-border">
-                        <Image
-                          src={item.product.images[0]}
-                          alt={item.product.name}
-                          fill
-                          sizes="60px"
-                          className="object-cover"
-                        />
-                      </div>
-                      <div>
-                        <p className="font-serif text-sm font-semibold text-charcoal">
-                          {item.product.name}
-                        </p>
-                        <p className="text-[11px] text-warm-gray">
-                          Qty: {item.quantity} • {item.selectedColor || "Standard Finish"}
-                        </p>
-                      </div>
-                    </div>
-                    <span className="font-bold text-charcoal">
-                      {formatPrice(item.product.price * item.quantity)}
-                    </span>
-                  </div>
-                ))}
+            <div className="py-5 border-b border-border print-avoid-break">
+              <h3 className="font-serif text-base sm:text-lg text-charcoal mb-3">
+                Purchased Furniture Items
+              </h3>
+
+              {/* Table Format for pristine Print & Screen Display */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-stone/30 text-charcoal font-semibold">
+                      <th className="py-2.5 px-3">#</th>
+                      <th className="py-2.5 px-3">Item Details</th>
+                      <th className="py-2.5 px-3">SKU</th>
+                      <th className="py-2.5 px-3 text-center">Qty</th>
+                      <th className="py-2.5 px-3 text-right">Unit Price</th>
+                      <th className="py-2.5 px-3 text-right">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/60">
+                    {order.items.map((item, idx) => (
+                      <tr key={idx} className="hover:bg-ivory/50">
+                        <td className="py-2.5 px-3 text-warm-gray align-top">{idx + 1}</td>
+                        <td className="py-2.5 px-3 align-top">
+                          <div className="font-semibold text-charcoal">{item.product.name}</div>
+                          <div className="text-[11px] text-warm-gray">
+                            Category: {item.product.category} • Finish: {item.selectedColor || "Standard"}
+                          </div>
+                        </td>
+                        <td className="py-2.5 px-3 font-mono text-[11px] text-warm-gray align-top">
+                          {item.product.sku}
+                        </td>
+                        <td className="py-2.5 px-3 text-center font-bold text-charcoal align-top">
+                          {item.quantity}
+                        </td>
+                        <td className="py-2.5 px-3 text-right text-warm-gray align-top">
+                          {formatPrice(item.product.price)}
+                        </td>
+                        <td className="py-2.5 px-3 text-right font-bold text-charcoal align-top">
+                          {formatPrice(item.product.price * item.quantity)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
 
               {/* Totals Summary */}
-              <div className="mt-4 pt-4 border-t border-dashed border-border space-y-1.5 text-xs text-warm-gray">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span className="font-medium text-charcoal">{formatPrice(order.subtotal)}</span>
-                </div>
-                {order.discount > 0 && (
-                  <div className="flex justify-between text-emerald-700 font-medium">
-                    <span>Discount ({order.couponCode})</span>
-                    <span>-{formatPrice(order.discount)}</span>
+              <div className="mt-4 pt-3 border-t border-dashed border-border flex justify-end">
+                <div className="w-full sm:w-72 space-y-1.5 text-xs text-warm-gray">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span className="font-medium text-charcoal">{formatPrice(order.subtotal)}</span>
                   </div>
-                )}
-                <div className="flex justify-between">
-                  <span>Delivery Fee</span>
-                  <span>{order.deliveryFee === 0 ? "FREE" : formatPrice(order.deliveryFee)}</span>
-                </div>
-                <div className="pt-2 border-t border-border flex justify-between text-sm font-bold text-charcoal">
-                  <span>Total Amount</span>
-                  <span className="font-serif text-xl text-walnut">{formatPrice(order.total)}</span>
+
+                  {order.discount > 0 && (
+                    <div className="flex justify-between text-emerald-700 font-medium">
+                      <span>Privilege Discount ({order.couponCode})</span>
+                      <span>-{formatPrice(order.discount)}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between">
+                    <span>Delivery & Setup</span>
+                    <span>
+                      {order.deliveryFee === 0 ? (
+                        <span className="text-emerald-700 font-semibold">FREE</span>
+                      ) : (
+                        formatPrice(order.deliveryFee)
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="pt-2 border-t border-charcoal flex justify-between text-sm font-bold text-charcoal">
+                    <span>Total Payable</span>
+                    <span className="font-serif text-lg text-walnut">
+                      {formatPrice(order.total)}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Action CTAs */}
-          <div className="pt-6 flex flex-col sm:flex-row gap-3">
+          {/* Warranty & Authenticity Certification (Visible in Print & Screen) */}
+          <div className="pt-5 text-xs space-y-3 print-avoid-break">
+            <div className="p-3 bg-stone/20 rounded border border-border/80 flex items-start gap-2.5">
+              <Award className="w-4 h-4 text-walnut shrink-0 mt-0.5" />
+              <div className="text-[11px] leading-relaxed text-charcoal">
+                <strong className="block text-walnut uppercase tracking-wider font-semibold">
+                  5-Year Structural Hardwood Warranty Certificate
+                </strong>
+                This receipt confirms your furniture is manufactured from seasoned, borer-proof
+                hardwood. Covered against timber structural failure, joint displacement, and internal
+                borer defects for 5 years from delivery date.
+              </div>
+            </div>
+
+            {/* Print-Only Signature & Stamp Block */}
+            <div className="hidden print:grid grid-cols-2 gap-8 pt-8 mt-6 border-t border-dashed border-border text-[11px]">
+              <div>
+                <p className="text-warm-gray mb-10">Authorized Representative / Inspector:</p>
+                <div className="border-t border-charcoal pt-1 font-semibold text-charcoal">
+                  Furniture King Nepal Dispatch Team
+                </div>
+              </div>
+
+              <div>
+                <p className="text-warm-gray mb-10">Customer Acceptance / Received in Good Condition:</p>
+                <div className="border-t border-charcoal pt-1 font-semibold text-charcoal">
+                  {order?.customer.fullName || "Customer Signature"}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action CTAs (HIDDEN ON PRINT) */}
+          <div className="no-print print-hidden pt-6 mt-6 border-t border-border flex flex-col sm:flex-row gap-3">
             <a
               href={createWhatsAppConfirmationLink()}
               target="_blank"
@@ -246,6 +373,7 @@ function OrderSuccessContent() {
             </a>
 
             <button
+              type="button"
               onClick={handlePrint}
               className="btn-outline justify-center py-3 text-xs font-semibold flex items-center gap-2 cursor-pointer"
             >
