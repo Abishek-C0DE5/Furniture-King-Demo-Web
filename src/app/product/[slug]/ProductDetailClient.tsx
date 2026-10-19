@@ -7,6 +7,7 @@ import { Product } from "@/lib/products";
 import { siteConfig, getWhatsAppLink } from "@/lib/config";
 import ProductCard from "@/components/ProductCard";
 import { useFavorites } from "@/hooks/useFavorites";
+import { Phone, Mail, Check, X, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 
 interface Props {
   product: Product;
@@ -26,9 +27,9 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
 
   return (
     <div style={{ background: "var(--color-ivory)" }}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8">
         {/* Breadcrumbs */}
-        <nav className="breadcrumbs mb-8" aria-label="Breadcrumb">
+        <nav className="breadcrumbs mb-6 sm:mb-8" aria-label="Breadcrumb">
           <a href="/">Home</a>
           <span style={{ color: "var(--color-border)" }}>/</span>
           <a href="/shop">Shop</a>
@@ -38,7 +39,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
           <span style={{ color: "var(--color-charcoal)" }}>{product.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Image Gallery */}
           <div>
             {/* Main Image */}
@@ -62,7 +63,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
 
             {/* Thumbnails */}
             {product.images.length > 1 && (
-              <div className="flex gap-2">
+              <div className="flex gap-2 overflow-x-auto pb-1 max-w-full">
                 {product.images.map((img, i) => (
                   <button
                     key={i}
@@ -241,7 +242,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                 <ul className="space-y-2" style={{ listStyle: "none", padding: 0 }}>
                   {product.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-2" style={{ fontSize: "0.9rem" }}>
-                      <span style={{ color: "var(--color-walnut)", marginTop: "2px" }}>✦</span>
+                      <Check className="w-4 h-4 text-walnut mt-0.5 shrink-0" />
                       {feature}
                     </li>
                   ))}
@@ -264,17 +265,19 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
               </a>
               <a
                 href={`tel:${siteConfig.phoneIntl}`}
-                className="btn-outline no-underline flex-1 justify-center"
+                className="btn-outline no-underline flex-1 justify-center inline-flex items-center gap-2"
               >
-                📞 Call Us
+                <Phone className="w-4 h-4" />
+                <span>Call Us</span>
               </a>
             </div>
             <a
               href={`mailto:${siteConfig.email}?subject=Inquiry about ${product.name}&body=Hello Furniture King Nepal, I am interested in ${product.name} (${product.sku}). Please share more information.`}
-              className="btn-outline no-underline w-full justify-center"
+              className="btn-outline no-underline w-full justify-center inline-flex items-center gap-2"
               style={{ display: "flex" }}
             >
-              ✉️ Email Inquiry
+              <Mail className="w-4 h-4" />
+              <span>Email Inquiry</span>
             </a>
 
             {/* Favorite */}
@@ -290,9 +293,11 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                 color: isFavorite(product.id) ? "#E53E3E" : "var(--color-charcoal)",
               }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill={isFavorite(product.id) ? "#E53E3E" : "none"} stroke="currentColor" strokeWidth="2">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
+              <Heart
+                className="w-4 h-4"
+                fill={isFavorite(product.id) ? "#E53E3E" : "none"}
+                stroke={isFavorite(product.id) ? "#E53E3E" : "currentColor"}
+              />
               {isFavorite(product.id) ? "Remove from Favorites" : "Add to Favorites"}
             </button>
           </div>
@@ -300,14 +305,14 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-20 pt-12" style={{ borderTop: "1px solid var(--color-border)" }}>
-            <div className="text-center mb-10">
+          <div className="mt-14 sm:mt-20 pt-8 sm:pt-12" style={{ borderTop: "1px solid var(--color-border)" }}>
+            <div className="text-center mb-8 sm:mb-10">
               <p className="section-eyebrow">You May Also Like</p>
               <h2 className="section-title" style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
                 Related Furniture
               </h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {relatedProducts.map((p) => (
                 <ProductCard
                   key={p.id}
@@ -338,12 +343,11 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
               border: "none",
               color: "white",
               cursor: "pointer",
-              fontSize: "1.5rem",
               zIndex: 310,
             }}
             aria-label="Close lightbox"
           >
-            ✕
+            <X className="w-7 h-7" />
           </button>
           {product.images.length > 1 && (
             <>
@@ -352,22 +356,22 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                   e.stopPropagation();
                   setSelectedImage((prev) => (prev > 0 ? prev - 1 : product.images.length - 1));
                 }}
-                className="absolute left-4 top-1/2 -translate-y-1/2"
+                className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center"
                 style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "white", cursor: "pointer", padding: "0.75rem", borderRadius: "50%", zIndex: 310 }}
                 aria-label="Previous image"
               >
-                ‹
+                <ChevronLeft className="w-6 h-6" />
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedImage((prev) => (prev < product.images.length - 1 ? prev + 1 : 0));
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2"
+                className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center"
                 style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "white", cursor: "pointer", padding: "0.75rem", borderRadius: "50%", zIndex: 310 }}
                 aria-label="Next image"
               >
-                ›
+                <ChevronRight className="w-6 h-6" />
               </button>
             </>
           )}

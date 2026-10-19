@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { siteConfig, getWhatsAppLink } from "@/lib/config";
+import { ArrowRight, MessageCircle } from "lucide-react";
 
 export const metadata: Metadata = {
   title: `About Us | ${siteConfig.businessName}`,
@@ -11,10 +12,10 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="pt-28 pb-20">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+    <div className="pt-24 sm:pt-28 pb-14 sm:pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Hero Banner */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-16">
           <span className="text-xs uppercase tracking-widest text-walnut font-medium mb-3 block">
             Our Purpose & Vision
           </span>
@@ -134,16 +135,18 @@ export default function AboutPage() {
           <p className="text-warm-gray text-sm sm:text-base">
             Explore our curated catalog or get in touch with our team directly. We are always happy to answer your inquiries.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-            <Link href="/shop" className="btn-primary no-underline">
-              Browse Furniture Catalog
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 w-full sm:w-auto">
+            <Link href="/shop" className="btn-primary no-underline inline-flex items-center justify-center gap-2 w-full sm:w-auto">
+              <span>Browse Furniture Catalog</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
             <a
               href={getWhatsAppLink()}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-secondary no-underline inline-flex items-center gap-2"
+              className="btn-secondary no-underline inline-flex items-center justify-center gap-2 w-full sm:w-auto"
             >
+              <MessageCircle className="w-4 h-4" />
               <span>Chat on WhatsApp</span>
             </a>
           </div>

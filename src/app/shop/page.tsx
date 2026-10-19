@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { products, categories, searchProducts, getAllStyles, getAllRooms } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import { useFavorites } from "@/hooks/useFavorites";
+import { Search, X, SlidersHorizontal } from "lucide-react";
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -73,7 +74,7 @@ function ShopContent() {
     <div className="min-h-screen" style={{ background: "var(--color-ivory)" }}>
       {/* Page Header */}
       <div
-        className="py-14 lg:py-20 px-6 lg:px-12 text-center"
+        className="py-12 sm:py-16 px-4 sm:px-6 lg:px-12 text-center"
         style={{ background: "var(--color-charcoal)" }}
       >
         <p className="section-eyebrow" style={{ color: "var(--color-walnut)" }}>
@@ -89,12 +90,12 @@ function ShopContent() {
         >
           Shop Furniture
         </h1>
-        <p style={{ color: "var(--color-warm-gray)", maxWidth: "480px", margin: "0 auto" }}>
+        <p style={{ color: "var(--color-warm-gray)", maxWidth: "480px", margin: "0 auto", fontSize: "0.95rem" }}>
           Explore our full collection. Use filters to find exactly what you&apos;re looking for.
         </p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-10">
         {/* Breadcrumbs */}
         <nav className="breadcrumbs mb-6" aria-label="Breadcrumb">
           <a href="/">Home</a>
@@ -111,20 +112,9 @@ function ShopContent() {
         </nav>
 
         {/* Search & Controls */}
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
           <div className="relative flex-1">
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--color-warm-gray)"
-              strokeWidth="2"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="M21 21l-4.35-4.35" />
-            </svg>
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-warm-gray" />
             <input
               type="text"
               className="search-input"
@@ -139,17 +129,17 @@ function ShopContent() {
                 aria-label="Clear search"
                 style={{ background: "none", border: "none", cursor: "pointer", color: "var(--color-warm-gray)" }}
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             )}
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="form-input"
-              style={{ width: "auto", minWidth: "140px" }}
+              className="form-input flex-1 sm:flex-initial"
+              style={{ minWidth: "130px" }}
             >
               <option value="featured">Featured</option>
               <option value="newest">Newest</option>
@@ -157,16 +147,20 @@ function ShopContent() {
             </select>
 
             <button
-              className="btn-outline lg:hidden"
+              className="btn-outline lg:hidden inline-flex items-center gap-1.5 shrink-0"
               onClick={() => setShowFilters(!showFilters)}
-              style={{ padding: "0.6rem 1rem", fontSize: "0.78rem" }}
+              style={{ padding: "0.65rem 1rem", fontSize: "0.78rem" }}
             >
-              Filters {hasActiveFilters ? "●" : ""}
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>{showFilters ? "Hide" : "Filters"}</span>
+              {hasActiveFilters && (
+                <span className="w-2 h-2 rounded-full bg-walnut inline-block" />
+              )}
             </button>
           </div>
         </div>
 
-        <div className="flex gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Filters — Desktop */}
           <aside
             className={`${showFilters ? "block" : "hidden"} lg:block w-full lg:w-56 flex-shrink-0`}
@@ -264,6 +258,17 @@ function ShopContent() {
                   ))}
                 </div>
               </div>
+
+              {/* Mobile Close / Apply Button */}
+              <div className="lg:hidden pt-4 pb-2 border-t border-soft-beige">
+                <button
+                  onClick={() => setShowFilters(false)}
+                  className="w-full btn-primary justify-center text-xs"
+                  style={{ padding: "0.75rem 1rem" }}
+                >
+                  View {filteredProducts.length} Results
+                </button>
+              </div>
             </div>
           </aside>
 
@@ -281,25 +286,28 @@ function ShopContent() {
             {hasActiveFilters && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {activeCategory && (
-                  <span className="filter-chip active" onClick={() => setActiveCategory("")} style={{ cursor: "pointer" }}>
-                    {categories.find((c) => c.slug === activeCategory)?.name} ✕
+                  <span className="filter-chip active inline-flex items-center gap-1.5" onClick={() => setActiveCategory("")} style={{ cursor: "pointer" }}>
+                    <span>{categories.find((c) => c.slug === activeCategory)?.name}</span>
+                    <X className="w-3.5 h-3.5" />
                   </span>
                 )}
                 {activeRoom && (
-                  <span className="filter-chip active" onClick={() => setActiveRoom("")} style={{ cursor: "pointer" }}>
-                    {activeRoom} ✕
+                  <span className="filter-chip active inline-flex items-center gap-1.5" onClick={() => setActiveRoom("")} style={{ cursor: "pointer" }}>
+                    <span>{activeRoom}</span>
+                    <X className="w-3.5 h-3.5" />
                   </span>
                 )}
                 {activeStyle && (
-                  <span className="filter-chip active" onClick={() => setActiveStyle("")} style={{ cursor: "pointer" }}>
-                    {activeStyle} ✕
+                  <span className="filter-chip active inline-flex items-center gap-1.5" onClick={() => setActiveStyle("")} style={{ cursor: "pointer" }}>
+                    <span>{activeStyle}</span>
+                    <X className="w-3.5 h-3.5" />
                   </span>
                 )}
               </div>
             )}
 
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id}
